@@ -1,12 +1,12 @@
 
 const { json } = require('stream/consumers');
-const product = require('./ProductClass')
+const Product2 = require('./ProductClass')
 const fs = require('fs')
 class ProductManager {
-    constructor() {
+    constructor(path) {
 
         this.id = 0
-
+        this.path = path
 
     }
 
@@ -14,18 +14,52 @@ class ProductManager {
     async getProducts() {
 
         try {
-            const products = JSON.parse(await fs.promises.readFile('./data.json', 'utf-8'))
+            const products = JSON.parse(await fs.promises.readFile(this.path, 'utf-8'))
             return products;
         } catch (error) {
             console.log(error);
         }
     }
 
-    async addProducts(product) {
+    async addProduct(product) {
         try {
             const products = await this.getProducts()
-            products.push(product)
-            await fs.promises.writeFile('./data.json', JSON.stringify(products, '', '\t'), 'utf-8')
+            let hasProduct = products.some(prod => prod.code === product.code)
+            if (hasProduct) {
+                console.log('el producto ya fue agregado');
+            } else {
+                this.id = products.length === 0 ? 1 : products.at(-1).id + 1
+                let newProduct = new Product2(
+                    this.id,
+                    product.title,
+                    product.description,
+                    product.price,
+                    product.thumbnail,
+                    product.code,
+                    product.stock
+                )
+                products.push(newProduct)
+                await fs.promises.writeFile(this.path, JSON.stringify(products, '', '\t'), 'utf-8')
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    async getProductById(id) {
+        try {
+            let products = await this.getProducts()
+            let product = products.find(product => product.id === id)
+            return product || 'el producto con ese id no existe';
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    async deleteProduct(id) {
+        try {
+            let filteredProducts = (await this.getProducts()).filter(product => product.id !== id)
+
+            await fs.promises.writeFile(this.path, JSON.stringify(filteredProducts, '', '\t'), 'utf-8')
         } catch (error) {
             console.log(error);
         }

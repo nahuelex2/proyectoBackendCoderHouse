@@ -2,48 +2,50 @@ const ProductManager = require('./ProductManagerClass')
 
 
 main = async () => {
+    // creacion de instancia de ProductManager
     const productManager = new ProductManager('./data.json')
 
-    // await productManager.getProducts()
+    // Primer llamada a getProducts() 
+    let Products = await productManager.getProducts()
+    console.log(Products);
 
-    // await productManager.addProducts({
-
-    //     title: "3",
-    //     price: 555
-
-    // })
-    console.log(await productManager.getProducts());
-
-    // await productManager.getProductById(32)
-    // console.log(await productManager.getProducts());
-    // await productManager.deleteProduct(1)
-    // console.log(await productManager.getProducts());
 
     let product = {
         title: 'Producto de prueba',
         description: 'Este es un producto de prueba',
         price: 200,
         thumbnail: 'Sin imagen',
-        code: 'ccc',
+        code: 'bbb',
         stock: 25
     }
 
 
-    await productManager.addProduct(product)
+    // try {
+    //     await productManager.addProduct(product)
+    // } catch (error) {
+    //     console.log(error);
+    // }
 
-    let product2 = {
-        title: 'Producto de prueba',
-        description: 'Este es un producto de prueba',
-        price: 200,
-        thumbnail: 'Sin imagen',
-        code: 'hhh',
-        stock: 25
-    }
-    await productManager.addProduct(product2)
 
-    console.log(await productManager.getProducts());
+    // //segundo llamado a getproducts Esta vez trae con el producto agregado
+    // let products = await productManager.getProducts()
+    // console.log(products);
 
-    let prods = await productManager.getProducts()
+
+
+    //getProductById
+    // let ProductById = await productManager.getProductById(1)
+    // console.log(ProductById);
+
+
+    //updateProduct
+    // await productManager.updateProduct(23, 'stock', 20)
+    // console.log(await productManager.getProducts());
+
+
+    //delete product
+    // await productManager.deleteProduct(1)
+    // console.log(await productManager.getProducts());
 
 
 }

@@ -55,14 +55,47 @@ class ProductManager {
             console.log(error);
         }
     }
-    async deleteProduct(id) {
-        try {
-            let filteredProducts = (await this.getProducts()).filter(product => product.id !== id)
 
-            await fs.promises.writeFile(this.path, JSON.stringify(filteredProducts, '', '\t'), 'utf-8')
-        } catch (error) {
-            console.log(error);
+    async updateProduct(id, key, newValue) {
+        let products = await this.getProducts()
+
+        let product = await this.getProductById(id)
+
+        let index = products.findIndex(prod => prod.id === id)
+        console.log(index);
+        if (index !== -1) {
+            products[index][key] = newValue
+
+
+            try {
+                await fs.promises.writeFile(this.path, JSON.stringify(products, '', '\t'), 'utf-8')
+
+            } catch (error) {
+                console.log(error);
+            }
+
+
+        } else {
+            console.log('producto no encontrado');
         }
+    }
+    async deleteProduct(id) {
+
+        let products = await this.getProducts()
+        let productExist = products.some(product => product.id === id)
+
+        if (productExist) {
+            let filteredProducts = products.filter(product => product.id !== id)
+            try {
+                await fs.promises.writeFile(this.path, JSON.stringify(filteredProducts, '', '\t'), 'utf-8')
+                console.log('producto eliminado');
+            }
+            catch (error) {
+                console.log(error);
+            }
+        } else
+            console.log('no existen productos con ese id');
+
     }
 }
 module.exports = ProductManager

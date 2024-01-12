@@ -2,6 +2,8 @@
 const { json } = require('stream/consumers');
 const Product2 = require('./ProductClass')
 const fs = require('fs')
+
+
 class ProductManager {
     constructor(path) {
 

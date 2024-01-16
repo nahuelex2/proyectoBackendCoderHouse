@@ -1,7 +1,8 @@
-const ProductManager = require('./ProductManagerClass')
+const ProductManager = require('./ProductManager')
 const express = require('express')
-
+const uuid4 = require('uuid4')
 const app = express()
+app.use(express.json())
 const port = 8080
 
 app.listen(port, () => {
@@ -68,5 +69,56 @@ app.get('/', (req, res) => {
 app.get('/allProducts', async (req, res) => {
     let Products = await productManager.getProducts()
     console.log(Products);
-    res.send(Products)
+    res.send({
+        message: 'todos los productos ok',
+        data: Products
+    })
+})
+
+app.post('/saveProduct', async (req, res) => {
+
+    const id = uuid4()
+    let product = req.body
+    // product.id = id
+    // console.log(product);
+
+    let test = await productManager.addProduct(product)
+
+    if (test) {
+        res.send({
+            message: 'producto guardado correctamente',
+            data: product
+        })
+    } else {
+        res.send({
+            message: res.send({ message: "producto ya existe" })
+        })
+    }
+
+
+
+
+
+})
+
+app.get('/productById/:id', async (req, res) => {
+    let { id } = req.params
+    let ProductById = await productManager.getProductById(id)
+    if (ProductById) {
+        res.send({
+            ProductById
+        })
+    } else {
+        res.status(404).send({
+            message: 'producto no encontrado'
+        })
+    }
+})
+
+app.delete('/deleteProductById/:id', async (req, res) => {
+
+    let { id } = req.params
+    let value = await productManager.deleteProduct(id)
+    console.log(value);
+    res.send({ value })
 })

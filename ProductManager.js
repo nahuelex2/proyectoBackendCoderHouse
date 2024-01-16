@@ -30,17 +30,10 @@ class ProductManager {
             if (hasProduct) {
                 console.log('el producto ya fue agregado');
             } else {
-                this.id = products.length === 0 ? 1 : products.at(-1).id + 1
-                let newProduct = new Product2(
-                    this.id,
-                    product.title,
-                    product.description,
-                    product.price,
-                    product.thumbnail,
-                    product.code,
-                    product.stock
-                )
-                products.push(newProduct)
+                this.id = products.length == 0 ? 1 : products.at(-1).id + 1
+
+                product.id = this.id
+                products.push(product)
                 await fs.promises.writeFile(this.path, JSON.stringify(products, '', '\t'), 'utf-8')
             }
 
@@ -51,10 +44,10 @@ class ProductManager {
     async getProductById(id) {
         try {
             let products = await this.getProducts()
-            let product = products.find(product => product.id === id)
-            return product || 'el producto con ese id no existe';
+            let product = products.find(product => product.id == id)
+            return product
         } catch (error) {
-            console.log(error);
+            return error
         }
     }
 
@@ -84,19 +77,19 @@ class ProductManager {
     async deleteProduct(id) {
 
         let products = await this.getProducts()
-        let productExist = products.some(product => product.id === id)
+        let productExist = products.some(product => product.id == id)
 
         if (productExist) {
-            let filteredProducts = products.filter(product => product.id !== id)
+            let filteredProducts = products.filter(product => product.id != id)
             try {
                 await fs.promises.writeFile(this.path, JSON.stringify(filteredProducts, '', '\t'), 'utf-8')
-                console.log('producto eliminado');
+                return `producto con id: ${id} eliminado`
             }
             catch (error) {
-                console.log(error);
+                return error
             }
         } else
-            console.log('no existen productos con ese id');
+            return 'no existen productos con ese id'
 
     }
 }

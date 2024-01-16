@@ -7,5 +7,18 @@
 		"thumbnail": "Sin imagen",
 		"code": "bbb",
 		"stock": 25
+	},
+	{
+		"title": "televisor",
+		"price": 556,
+		"Stock": 10,
+		"id": 2
+	},
+	{
+		"title": "radio",
+		"price": 22,
+		"Stock": 434,
+		"code": "xxx",
+		"id": 3
 	}
 ]
